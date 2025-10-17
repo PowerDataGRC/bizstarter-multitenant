@@ -8,3 +8,5 @@ new-feature.md
 .env.development.local
 .env.production.local
 __pycache__/
+deploy.sh
+/node_modules/

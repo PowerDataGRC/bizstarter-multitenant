@@ -1,3 +1,6 @@
 {
-    "scripts": {}
+    "scripts": {},
+    "dependencies": {
+        "firebase": "^12.4.0"
+    }
 }

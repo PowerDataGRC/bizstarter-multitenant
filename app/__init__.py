@@ -7,10 +7,14 @@ from flask_migrate import Migrate
 import click
 from alembic.config import Config
 from alembic import command
+from authlib.integrations.flask_client import OAuth
+from sqlalchemy_utils import database_exists, create_database
 
 from .extensions import db, login_manager
 from .database import get_assessment_messages
 
+
+oauth = OAuth()
 
 def create_app():
     load_dotenv(find_dotenv(".env"))
@@ -27,6 +31,8 @@ def create_app():
     )
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['GOOGLE_CLIENT_ID'] = os.environ.get('GOOGLE_CLIENT_ID')
+    app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get('GOOGLE_CLIENT_SECRET')
 
     # --- Database Configuration ---
     load_dotenv() # ensure env vars are loaded
@@ -70,7 +76,21 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
+    oauth.init_app(app)
     Migrate(app, db)
+
+    oauth.register(
+        name='google',
+        client_id=app.config['GOOGLE_CLIENT_ID'],
+        client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+        access_token_url='https://accounts.google.com/o/oauth2/token',
+        access_token_params=None,
+        authorize_url='https://accounts.google.com/o/oauth2/auth',
+        authorize_params=None,
+        api_base_url='https://www.googleapis.com/oauth2/v1/',
+        userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',  # This is the userinfo endpoint
+        client_kwargs={'scope': 'openid email profile'},
+    )
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
@@ -141,6 +161,12 @@ def seed_initial_data():
 def init_db_command():
     """Clear the existing data and create new tables."""
     with current_app.app_context():
+        db_url = current_app.config['SQLALCHEMY_DATABASE_URI']
+        if not database_exists(db_url):
+            click.echo(f"Database not found. Creating database: {db_url}")
+            create_database(db_url)
+            click.echo("Database created.")
+
         click.echo("Applying database migrations...")
         try:
             migrations_dir = os.path.join(os.path.dirname(current_app.root_path), 'migrations')

@@ -5,10 +5,20 @@ from sqlalchemy import inspect
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import json
 
+class Tenant(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    users = relationship('User', back_populates='tenant')
+
+    def __init__(self, name):
+        self.name = name
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    tenant_id = mapped_column(db.ForeignKey('tenant.id'))
+    tenant = relationship('Tenant', back_populates='users')
 
     # Relationships
     products: Mapped[list["Product"]] = relationship('Product', backref='user', lazy=True, cascade="all, delete-orphan")
@@ -19,9 +29,10 @@ class User(UserMixin, db.Model):
 
     startup_activities: Mapped[list["BusinessStartupActivity"]] = relationship('BusinessStartupActivity', backref='user', lazy=True, cascade="all, delete-orphan")
 
-    def __init__(self, username: str, password_hash: str):
+    def __init__(self, username: str, password_hash: str, tenant_id: int):
         self.username = username
         self.password_hash = password_hash
+        self.tenant_id = tenant_id
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,13 +41,16 @@ class Product(db.Model):
     sales_volume = db.Column(db.Integer, nullable=False, default=0)
     sales_volume_unit = db.Column(db.String(20), nullable=False, default='monthly')
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'))
+    tenant_id: Mapped[int] = mapped_column(db.ForeignKey('tenant.id'))
 
-    def __init__(self, description, price, sales_volume, sales_volume_unit, user_id):
+
+    def __init__(self, description, price, sales_volume, sales_volume_unit, user_id, tenant_id):
         self.description = description
         self.price = price
         self.sales_volume = sales_volume
         self.sales_volume_unit = sales_volume_unit
         self.user_id = user_id
+        self.tenant_id = tenant_id
 
     def to_dict(self) -> Dict[str, Any]:
         insp = inspect(self)
@@ -50,12 +64,15 @@ class Expense(db.Model):
     amount = db.Column(db.Float, nullable=False, default=0.0)
     frequency = db.Column(db.String(20), nullable=False, default='monthly')
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'))
+    tenant_id: Mapped[int] = mapped_column(db.ForeignKey('tenant.id'))
 
-    def __init__(self, item, amount, frequency, user_id):
+    def __init__(self, item, amount, frequency, user_id, tenant_id):
         self.item = item
         self.amount = amount
         self.frequency = frequency
         self.user_id = user_id
+        self.tenant_id = tenant_id
+
 
     def to_dict(self) -> Dict[str, Any]:
         insp = inspect(self)
@@ -68,11 +85,15 @@ class Asset(db.Model):
     description = db.Column(db.String(200), nullable=False)
     amount = db.Column(db.Float, nullable=False, default=0.0)
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'))
+    tenant_id: Mapped[int] = mapped_column(db.ForeignKey('tenant.id'))
 
-    def __init__(self, description, amount, user_id):
+
+    def __init__(self, description, amount, user_id, tenant_id):
         self.description = description
         self.amount = amount
         self.user_id = user_id
+        self.tenant_id = tenant_id
+
 
     def to_dict(self) -> Dict[str, Any]:
         insp = inspect(self)
@@ -85,11 +106,15 @@ class Liability(db.Model):
     description = db.Column(db.String(200), nullable=False)
     amount = db.Column(db.Float, nullable=False, default=0.0)
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'))
+    tenant_id: Mapped[int] = mapped_column(db.ForeignKey('tenant.id'))
 
-    def __init__(self, description, amount, user_id):
+
+    def __init__(self, description, amount, user_id, tenant_id):
         self.description = description
         self.amount = amount
         self.user_id = user_id
+        self.tenant_id = tenant_id
+
 
     def to_dict(self) -> Dict[str, Any]:
         insp = inspect(self)
@@ -100,7 +125,8 @@ class Liability(db.Model):
 class FinancialParams(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), unique=True)
-    
+    tenant_id: Mapped[int] = mapped_column(db.ForeignKey('tenant.id'))
+
     company_name = db.Column(db.String(100), default='')
     cogs_percentage = db.Column(db.Float, default=35.0)
     tax_rate = db.Column(db.Float, default=8.0)
@@ -126,8 +152,10 @@ class FinancialParams(db.Model):
     loan_monthly_payment = db.Column(db.Float, nullable=True)
     loan_schedule = db.Column(db.Text, nullable=True)
 
-    def __init__(self, user_id):
+    def __init__(self, user_id, tenant_id):
         self.user_id = user_id
+        self.tenant_id = tenant_id
+
 
 class AssessmentMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -151,13 +179,16 @@ class BusinessStartupActivity(db.Model):
     weight = db.Column(db.Integer, nullable=False)
     progress = db.Column(db.Integer, nullable=False, default=0)
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'))
+    tenant_id: Mapped[int] = mapped_column(db.ForeignKey('tenant.id'))
 
-    def __init__(self, activity, description, weight, progress, user_id):
+
+    def __init__(self, activity, description, weight, progress, user_id, tenant_id):
         self.activity = activity
         self.description = description
         self.weight = weight
         self.progress = progress
         self.user_id = user_id
+        self.tenant_id = tenant_id
 
     def to_dict(self) -> Dict[str, Any]:
         insp = inspect(self)

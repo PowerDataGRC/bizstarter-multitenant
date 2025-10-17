@@ -7,7 +7,7 @@ from .models import Tenant, User, Expense, Asset, Liability, FinancialParams, Bu
 from .extensions import db
 from . import oauth
 
-bp = Blueprint('auth', __name__, url_prefix='/')
+bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/login')
 def login():
@@ -47,7 +47,6 @@ def google_callback():
 
     login_user(user, remember=True)
     return redirect(url_for('main.intro'))
-
 
 def _seed_initial_user_data(user_id, tenant_id):
     """Seeds the database with a default set of data for a new user."""

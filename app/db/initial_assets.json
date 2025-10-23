@@ -1,0 +1,14 @@
+[
+    {
+        "description": "Cash & Equivalents",
+        "amount": 10000.0
+    },
+    {
+        "description": "Inventory",
+        "amount": 5000.0
+    },
+    {
+        "description": "Equipment",
+        "amount": 35000.0
+    }
+]

@@ -1,0 +1,155 @@
+{
+  "industries": [
+    {
+      "naics_code": "11",
+      "name": "Agriculture, Forestry, Fishing and Hunting"
+    },
+    {
+      "naics_code": "21",
+      "name": "Mining, Quarrying, and Oil and Gas Extraction"
+    },
+    {
+      "naics_code": "22",
+      "name": "Utilities"
+    },
+    {
+      "naics_code": "23",
+      "name": "Construction"
+    },
+    {
+      "naics_code": "31-33",
+      "name": "Manufacturing"
+    },
+    {
+      "naics_code": "42",
+      "name": "Wholesale Trade"
+    },
+    {
+      "naics_code": "44-45",
+      "name": "Retail Trade"
+    },
+    {
+      "naics_code": "48-49",
+      "name": "Transportation and Warehousing"
+    },
+    {
+      "naics_code": "51",
+      "name": "Information"
+    },
+    {
+      "naics_code": "52",
+      "name": "Finance and Insurance"
+    },
+    {
+      "naics_code": "53",
+      "name": "Real Estate and Rental and Leasing"
+    },
+    {
+      "naics_code": "54",
+      "name": "Professional, Scientific, and Technical Services"
+    },
+    {
+      "naics_code": "55",
+      "name": "Management of Companies and Enterprises"
+    },
+    {
+      "naics_code": "56",
+      "name": "Administrative and Support and Waste Management"
+    },
+    {
+      "naics_code": "61",
+      "name": "Educational Services"
+    },
+    {
+      "naics_code": "62",
+      "name": "Health Care and Social Assistance"
+    },
+    {
+      "naics_code": "71",
+      "name": "Arts, Entertainment, and Recreation"
+    },
+    {
+      "naics_code": "72",
+      "name": "Accommodation and Food Services"
+    },
+    {
+      "naics_code": "81",
+      "name": "Other Services (except Public Administration)"
+    },
+    {
+      "naics_code": "92",
+      "name": "Public Administration"
+    }
+  ],
+  "financial-params": [
+  {
+    "depreciation": "",
+    "loan-amount": "",
+    "loan-interest-rate": "",
+    "loan-term": ""
+  }
+  ],
+  "expenses": [
+    {
+      "item": "Rent/Lease",
+      "amount": "1000",
+      "frequency": "Monthly"
+    },
+    {
+      "item": "Salaries and Wages",
+      "amount": "5000",
+      "frequency": "Monthly"
+    },
+    {
+      "item": "Utilities (Electricity, Water, Internet)",
+      "amount": "500",
+      "frequency": "Monthly"
+    },
+    {
+      "item": "Marketing and Advertising",
+      "amount": "100",
+      "frequency": "Monthly"
+    },
+    {
+      "item": "Software & Subscriptions",
+      "amount": "100",
+      "frequency": "Monthly"
+    },
+    {
+      "item": "Insurance",
+      "amount": "200",
+      "frequency": "Monthly"
+    },
+    {
+      "item": "Legal & Accounting",
+      "amount": "150",
+      "frequency": "Monthly"
+    },
+    {
+      "item": "Office Supplies",
+      "amount": "20",
+      "frequency": "Monthly"
+    }
+  ],
+  "assessment-msgs":
+  {
+  "high_risk": {
+      "status": "High Risk",
+      "caption": "Your monthly profit does not sufficiently cover the loan payment. This is a high-risk loan.",
+      "status_class": "danger",
+      "dscr_status": "A DSCR below 1.0 indicates that the business's net operating income is not sufficient to cover its debt obligations, signaling high financial risk."
+  },
+  "medium_risk": {
+      "status": "Medium Risk",
+      "caption": "Your monthly profit covers the loan payment, but there is a limited safety buffer.",
+      "status_class": "warning",
+      "dscr_status": "A DSCR between 1.0 and 1.25 is often considered borderline. While income covers debt, the buffer for unexpected expenses is slim."
+  },
+  "low_risk": {
+      "status": "Low Risk",
+      "caption": "Your monthly profit comfortably covers the loan payment with a solid safety buffer.",
+      "status_class": "success",
+      "dscr_status": "A DSCR above 1.25 is generally considered healthy, indicating a good ability to handle current debt payments with a comfortable cushion."
+  }
+}
+}

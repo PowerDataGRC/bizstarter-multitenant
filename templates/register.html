@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-8 text-center">
+        <h1 class="my-4"><span class="icon">🚀</span> Create Your Account</h1>
+        <p class="lead">Get started by creating a free account to save your financial models.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category or 'warning' }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Register</h5>
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 register-form">
+                        <form action="{{ url_for('registration.register') }}" method="POST">
+                            <div class="mb-3"><input type="text" name="company_name" class="form-control"
+                                    placeholder="Company Name" required></div>
+                            <div class="mb-3"><input type="email" name="email_address" class="form-control"
+                                    placeholder="Email Address" required></div>
+                            <div class="mb-3"><input type="text" name="username" class="form-control"
+                                    placeholder="Choose a Username" required></div>
+                            <div class="mb-3"><input type="password" name="password" class="form-control"
+                                    placeholder="Choose a Password" required></div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="use_multilocations" name="use_multilocations">
+                                <label class="form-check-label" for="use_multilocations">Use Multilocations?</label>
+                            </div>
+                            <div id="locations_container" style="display: none;">
+                                <div id="location_fields">
+                                    <div class="mb-3">
+                                        <input type="text" name="locations" class="form-control" placeholder="Location Name (max 20 chars)" maxlength="20">
+                                    </div>
+                                </div>
+                                <button type="button" id="add_location_btn" class="btn btn-secondary btn-sm mb-3">Add Another Location</button>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Create Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="mt-3">Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const useMultilocations = document.getElementById('use_multilocations');
+        const locationsContainer = document.getElementById('locations_container');
+        const addLocationBtn = document.getElementById('add_location_btn');
+        const locationFields = document.getElementById('location_fields');
+
+        useMultilocations.addEventListener('change', function () {
+            locationsContainer.style.display = this.checked ? 'block' : 'none';
+        });
+
+        addLocationBtn.addEventListener('click', function () {
+            const newLocationInput = document.createElement('div');
+            newLocationInput.classList.add('mb-3');
+            newLocationInput.innerHTML = `<input type="text" name="locations" class="form-control" placeholder="Location Name (max 20 chars)" maxlength="20">`;
+            locationFields.appendChild(newLocationInput);
+        });
+    });
+</script>
+{% endblock %}

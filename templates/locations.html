@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Business Locations</h2>
+    <a href="{{ url_for('locations.add_location') }}" class="btn btn-primary mb-3">Add Location</a>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip Code</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for location in locations %}
+            <tr>
+                <td>{{ location.name }}</td>
+                <td>{{ location.address }}</td>
+                <td>{{ location.city }}</td>
+                <td>{{ location.state }}</td>
+                <td>{{ location.zip_code }}</td>
+                <td>
+                    <a href="{{ url_for('locations.edit_location', location_id=location.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <form action="{{ url_for('locations.delete_location', location_id=location.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this location?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

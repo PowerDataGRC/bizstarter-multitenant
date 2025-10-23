@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{{ title }}</h2>
+    <form method="POST" action="{{ form_url }}">
+        <div class="mb-3">
+            <label for="name" class="form-label">Location Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ location.name if location else '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="address" name="address" value="{{ location.address if location else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="city" class="form-label">City</label>
+            <input type="text" class="form-control" id="city" name="city" value="{{ location.city if location else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="state" class="form-label">State</label>
+            <input type="text" class="form-control" id="state" name="state" value="{{ location.state if location else '' }}">
+        </div>
+        <div class="mb-3">
+            <label for="zip_code" class="form-label">Zip Code</label>
+            <input type="text" class="form-control" id="zip_code" name="zip_code" value="{{ location.zip_code if location else '' }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{{ url_for('locations.list_locations') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

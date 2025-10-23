@@ -1,0 +1,42 @@
+[
+    {
+        "item": "Rent/Lease",
+        "amount": 1200.0,
+        "frequency": "monthly"
+    },
+    {
+        "item": "Salaries and Wages",
+        "amount": 5000.0,
+        "frequency": "monthly"
+    },
+    {
+        "item": "Utilities (Electricity, Water, Internet)",
+        "amount": 400.0,
+        "frequency": "monthly"
+    },
+    {
+        "item": "Marketing and Advertising",
+        "amount": 600.0,
+        "frequency": "monthly"
+    },
+    {
+        "item": "Software & Subscriptions",
+        "amount": 150.0,
+        "frequency": "monthly"
+    },
+    {
+        "item": "Insurance",
+        "amount": 200.0,
+        "frequency": "monthly"
+    },
+    {
+        "item": "Legal & Accounting",
+        "amount": 250.0,
+        "frequency": "monthly"
+    },
+    {
+        "item": "Office Supplies",
+        "amount": 100.0,
+        "frequency": "monthly"
+    }
+]

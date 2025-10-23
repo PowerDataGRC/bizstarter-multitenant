@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}BizStarter{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS - Must be after Bootstrap to override styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+
+    <style>
+        .icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .ratio-group-title {
+            font-weight: bold;
+            color: var(--bs-secondary-color);
+            /* Use Bootstrap CSS variable for theme compatibility */
+            margin-bottom: 1rem;
+        }
+    </style>
+    {% block head_extra %}{% endblock %}
+</head>
+
+<body class="d-flex">
+    <div class="sidebar d-flex flex-column p-3">
+        <a class="sidebar-brand d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none"
+            href="{{ url_for('main.index') }}">
+            <span class="fs-4">📈 BizStarter</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="{{ url_for('main.intro') }}"
+                    class="nav-link {% if request.endpoint == 'main.intro' %}active{% endif %}">Intro</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('main.startup_activities') }}"
+                    class="nav-link {% if request.endpoint == 'main.startup_activities' %}active{% endif %}">Startup
+                    Activities</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('main.product_detail') }}"
+                    class="nav-link {% if request.endpoint == 'main.product_detail' %}active{% endif %}">Products &
+                    Expenses</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('main.financial_forecast') }}"
+                    class="nav-link {% if request.endpoint == 'main.financial_forecast' %}active{% endif %}">Financial
+                    Forecast</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('main.loan_calculator') }}"
+                    class="nav-link {% if request.endpoint == 'main.loan_calculator' %}active{% endif %}">Loan
+                    Calculator</a>
+            </li>
+            {% if current_user.is_authenticated %}
+                {% if tenant and tenant.use_multilocations %}
+                <li class="nav-item">
+                    <a href="{{ url_for('locations.list_locations') }}" 
+                       class="nav-link {% if request.endpoint.startswith('locations.') %}active{% endif %}">Locations</a>
+                </li>
+                {% endif %}
+            {% endif %}
+            <li class="nav-item">
+                <a href="{{ url_for('main.library') }}"
+                    class="nav-link {% if request.endpoint == 'main.library' %}active{% endif %}">Help & Resources</a>
+            </li>
+        </ul>
+        <hr>
+        {% if current_user.is_authenticated %}
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <strong>👤 {{ current_user.username }}</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
+                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+            </ul>
+        </div>
+        {% endif %}
+        <div class="sidebar-footer mt-3">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="theme-switcher">
+                <label class="form-check-label" for="theme-switcher">Dark Mode</label>
+            </div>
+            <p class="text-muted small mt-2">Last updated: Oct 16, 2025</p>
+        </div>
+    </div>
+
+    <main class="main-content p-4">
+        {% block content %}{% endblock %}
+
+        {% if request.endpoint in ['auth.login', 'auth.register'] %}
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-8 offset-md-2 text-center">
+                    <hr>
+                    <p class="small text-muted mt-3">
+                        <strong>Disclaimer:</strong> The financial forecasts and calculations provided
+                        by <a href="https://powerdatainc.com" target="_blank">PowerData Solutions</a> as part
+                        of BizStarter are for informational and planning purposes only. They should not be considered as
+                        financial, legal, or investment advice. Consult with our team of qualified professionals before
+                        making any business decisions.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // --- Theme Switcher Logic ---
+        const themeSwitcher = document.getElementById('theme-switcher');
+        const htmlElement = document.documentElement;
+
+        // Set the theme on initial load
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-bs-theme', currentTheme);
+        themeSwitcher.checked = currentTheme === 'dark';
+
+        // Listen for theme changes
+        themeSwitcher.addEventListener('change', function () {
+            const theme = this.checked ? 'dark' : 'light';
+            htmlElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
